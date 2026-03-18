@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLE Time Sender</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial Black', Arial, sans-serif;
+            background: #E8E8E8;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: #FFFFFF;
+            border: 5px solid #000000;
+            max-width: 450px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* ── Header block ── */
+        .header-block {
+            background: #F5C518;
+            border-bottom: 5px solid #000000;
+            padding: 20px 25px 16px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #000000;
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: #000000;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 3px;
+        }
+
+        .header-link {
+            margin-top: 8px;
+        }
+
+        .header-link a {
+            color: #000000;
+            font-size: 11px;
+            font-weight: 700;
+            text-decoration: none;
+            border-bottom: 2px solid #000000;
+            padding-bottom: 1px;
+        }
+
+        .header-link a:hover {
+            background: #000000;
+            color: #F5C518;
+            padding: 2px 4px;
+            border-bottom: none;
+        }
+
+        /* ── Status bar ── */
+        .status {
+            padding: 12px 25px;
+            font-weight: 900;
+            font-size: 14px;
+            text-align: center;
+            border-bottom: 5px solid #000000;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .status.disconnected {
+            background: #D62B2B;
+            color: #FFFFFF;
+        }
+
+        .status.connected {
+            background: #1A52B0;
+            color: #FFFFFF;
+        }
+
+        .status.connecting {
+            background: #F5C518;
+            color: #000000;
+        }
+
+        /* ── Inner content padding ── */
+        .inner {
+            padding: 20px 25px;
+        }
+
+        /* ── Buttons ── */
+        button {
+            width: 100%;
+            padding: 14px;
+            border: 4px solid #000000;
+            font-size: 15px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.1s;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #D62B2B;
+            color: #FFFFFF;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #000000;
+            color: #D62B2B;
+        }
+
+        .btn-secondary {
+            background: #E8E8E8;
+            color: #000000;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #000000;
+            color: #E8E8E8;
+        }
+
+        /* ── Time display box ── */
+        .time-display-box {
+            background: #1A52B0;
+            border: 4px solid #000000;
+            padding: 22px;
+            margin: 0 0 12px 0;
+        }
+
+        .time-display {
+            font-size: 52px;
+            font-weight: 900;
+            text-align: center;
+            color: #FFFFFF;
+            margin-bottom: 6px;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 2px;
+        }
+
+        .date-display {
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+            color: #F5C518;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 1px;
+        }
+
+        .format-display {
+            font-size: 11px;
+            font-family: monospace;
+            color: #000000;
+            background: #FFFFFF;
+            border: 3px solid #000000;
+            padding: 8px 10px;
+            margin-top: 12px;
+        }
+
+        .format-display table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .format-display td {
+            padding: 2px 6px 2px 0;
+            vertical-align: bottom;
+        }
+
+        .format-display td:first-child {
+            white-space: nowrap;
+            width: 1%;
+        }
+
+        .format-display td code {
+            display: block;
+            width: 100%;
+        }
+
+        /* ── Auto-send row ── */
+        .auto-send-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #F5C518;
+            border: 4px solid #000000;
+            padding: 12px 15px;
+            margin-bottom: 12px;
+        }
+
+        .auto-send-container span {
+            font-weight: 900;
+            color: #000000;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* ── Toggle switch ── */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #E8E8E8;
+            border: 3px solid #000000;
+            transition: .2s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: #000000;
+            transition: .2s;
+        }
+
+        input:checked + .slider {
+            background-color: #1A52B0;
+        }
+
+        input:checked + .slider:before {
+            background-color: #FFFFFF;
+            transform: translateX(24px);
+        }
+
+        input:disabled + .slider {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        /* ── Info box ── */
+        .info {
+            background: #E8E8E8;
+            border: 4px solid #000000;
+            padding: 12px 15px;
+            font-size: 12px;
+            color: #000000;
+            margin-bottom: 12px;
+        }
+
+        .info strong {
+            font-weight: 900;
+            color: #000000;
+        }
+
+        .info code {
+            background: #FFFFFF;
+            border: 2px solid #000000;
+            padding: 1px 5px;
+            font-family: monospace;
+            font-size: 11px;
+            font-weight: 700;
+            display: block;
+            width: 100%;
+        }
+
+        .info table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 6px;
+        }
+
+        .info td {
+            padding: 2px 6px 2px 0;
+            vertical-align: bottom;
+            white-space: nowrap;
+        }
+
+        .info td:first-child {
+            width: 1%;
+        }
+
+        .info td:nth-child(2) {
+            width: 110px;
+        }
+
+        .info td:last-child {
+            white-space: nowrap;
+        }
+
+        /* ── Log ── */
+        .log {
+            background: #FFFFFF;
+            border: 4px solid #000000;
+            padding: 10px 12px;
+            max-height: 140px;
+            overflow-y: auto;
+            font-size: 11px;
+            font-family: monospace;
+        }
+
+        .log-entry {
+            margin-bottom: 4px;
+            color: #444444;
+        }
+
+        .log-entry.error {
+            color: #D62B2B;
+            font-weight: 700;
+        }
+
+        .log-entry.success {
+            color: #1A52B0;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="header-block">
+            <h1>🕐 BLE Time Sender</h1>
+            <p class="subtitle">Time &amp; Date Synchronisation</p>
+            <div class="header-link">
+                <a href="https://github.com/ednieuw/HTML-TimeSender" target="_blank">📖 Manual and source code</a>
+            </div>
+        </div>
+
+        <div id="status" class="status disconnected">
+            Not connected
+        </div>
+
+        <div class="inner">
+
+            <button id="connectBtn" class="btn-primary">
+                🔗 Connect to WordClock
+            </button>
+
+            <button id="disconnectBtn" class="btn-secondary" style="display: none;" disabled>
+                🔌 Disconnect
+            </button>
+
+            <div class="time-display-box">
+                <div class="time-display" id="timeDisplay">00:00:00</div>
+                <div class="date-display" id="dateDisplay">00-00-0000</div>
+                <div class="format-display">
+                    <table>
+                        <tr>
+                            <td>📤 Time:</td>
+                            <td><code id="timeFormat">T000000</code></td>
+                        </tr>
+                        <tr>
+                            <td>📅 Date:</td>
+                            <td><code id="dateFormat">D00000000</code></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <button id="sendBtn" class="btn-primary" disabled>
+                📤 Send Now
+            </button>
+
+            <div class="auto-send-container">
+                <span>🔄 Auto-send (every 30 seconds)</span>
+                <label class="switch">
+                    <input type="checkbox" id="autoSendToggle" disabled>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="info">
+                <strong>ℹ️ Format:</strong>
+                <table>
+                    <tr>
+                        <td>Time:</td>
+                        <td><code>Thhmmss</code></td>
+                        <td>(e.g. T143052)</td>
+                    </tr>
+                    <tr>
+                        <td>Date:</td>
+                        <td><code>Dddmmyyyy</code></td>
+                        <td>(e.g. D16022026)</td>
+                    </tr>
+                </table>
+                <span style="font-size: 11px; display: block; margin-top: 6px;">
+                    2 second delay between messages
+                </span>
+            </div>
+
+            <div class="log" id="log"></div>
+
+        </div>
+    </div>
+
+    <script>
+        let device = null;
+        let characteristic = null;
+        let autoSendInterval = null;
+
+        // Nordic UART Service UUIDs
+        const SERVICE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+        const CHARACTERISTIC_UUID_RX = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
+
+        const connectBtn = document.getElementById('connectBtn');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        const sendBtn = document.getElementById('sendBtn');
+        const statusDiv = document.getElementById('status');
+        const logDiv = document.getElementById('log');
+        const autoSendToggle = document.getElementById('autoSendToggle');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const dateDisplay = document.getElementById('dateDisplay');
+        const timeFormat = document.getElementById('timeFormat');
+        const dateFormat = document.getElementById('dateFormat');
+
+        // Check Web Bluetooth support
+        if (!navigator.bluetooth) {
+            log('❌ Web Bluetooth is not supported in this browser', 'error');
+            statusDiv.textContent = 'Web Bluetooth not supported';
+            connectBtn.disabled = true;
+        } else {
+            log('🚀 App started', 'success');
+        }
+
+        // Update clock every second
+        function updateClock() {
+            const now = new Date();
+
+            // Display time and date
+            timeDisplay.textContent = now.toLocaleTimeString('en-GB');
+            dateDisplay.textContent = now.toLocaleDateString('en-GB');
+
+            // Format strings
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            timeFormat.textContent = `T${hours}${minutes}${seconds}`;
+
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = String(now.getFullYear());
+            dateFormat.textContent = `D${day}${month}${year}`;
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Logging function
+        function log(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const timestamp = new Date().toLocaleTimeString('en-GB');
+            entry.textContent = `[${timestamp}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        // Connect to BLE device
+        connectBtn.addEventListener('click', async () => {
+            try {
+                log('🔍 Searching for WordClock (NUS service)...');
+                statusDiv.textContent = 'Connecting...';
+                statusDiv.className = 'status connecting';
+
+                device = await navigator.bluetooth.requestDevice({
+                    filters: [{ services: [SERVICE_UUID] }]
+                });
+
+                log(`✅ Device found: ${device.name}`, 'success');
+
+                const server = await device.gatt.connect();
+                log('🔗 Connected to GATT server', 'success');
+
+                const service = await server.getPrimaryService(SERVICE_UUID);
+                log('📡 UART service found', 'success');
+
+                characteristic = await service.getCharacteristic(CHARACTERISTIC_UUID_RX);
+                log('✨ RX characteristic found', 'success');
+
+                statusDiv.textContent = `Connected to ${device.name}`;
+                statusDiv.className = 'status connected';
+                connectBtn.style.display = 'none';
+                disconnectBtn.style.display = 'block';
+                disconnectBtn.disabled = false;
+                sendBtn.disabled = false;
+                autoSendToggle.disabled = false;
+
+                // Start auto-send by default
+                autoSendToggle.checked = true;
+                autoSendToggle.dispatchEvent(new Event('change'));
+
+                device.addEventListener('gattserverdisconnected', onDisconnected);
+
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+                statusDiv.textContent = 'Connection failed';
+                statusDiv.className = 'status disconnected';
+            }
+        });
+
+        // Disconnect
+        disconnectBtn.addEventListener('click', () => {
+            if (device && device.gatt.connected) {
+                device.gatt.disconnect();
+                log('🔌 Disconnected', 'success');
+            }
+        });
+
+        function onDisconnected() {
+            log('⚠️ Device disconnected');
+            statusDiv.textContent = 'Not connected';
+            statusDiv.className = 'status disconnected';
+            connectBtn.style.display = 'block';
+            disconnectBtn.style.display = 'none';
+            sendBtn.disabled = true;
+            autoSendToggle.disabled = true;
+            autoSendToggle.checked = false;
+            characteristic = null;
+
+            if (autoSendInterval) {
+                clearInterval(autoSendInterval);
+                autoSendInterval = null;
+            }
+        }
+
+        // Send time and date
+        async function sendTimeAndDate() {
+            if (!characteristic) {
+                log('❌ No connection', 'error');
+                return;
+            }
+
+            try {
+                const now = new Date();
+
+                // Format time: Thhmmss
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                const timeString = `T${hours}${minutes}${seconds}`;
+
+                // Send time
+                const timeEncoder = new TextEncoder();
+                await characteristic.writeValue(timeEncoder.encode(timeString));
+                log(`📤 Time sent: ${timeString}`, 'success');
+
+                // Wait 2 seconds
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                // Format date: Dddmmyyyy
+                const day = String(now.getDate()).padStart(2, '0');
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const year = String(now.getFullYear());
+                const dateString = `D${day}${month}${year}`;
+
+                // Send date
+                const dateEncoder = new TextEncoder();
+                await characteristic.writeValue(dateEncoder.encode(dateString));
+                log(`📅 Date sent: ${dateString}`, 'success');
+
+            } catch (error) {
+                log(`❌ Send failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Send button
+        sendBtn.addEventListener('click', sendTimeAndDate);
+
+        // Auto-send toggle
+        autoSendToggle.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                log('🔄 Auto-send enabled (every 30 seconds)', 'success');
+
+                // Send immediately
+                sendTimeAndDate();
+
+                // Then every 30 seconds
+                autoSendInterval = setInterval(() => {
+                    sendTimeAndDate();
+                }, 30000);
+            } else {
+                log('⏸️ Auto-send stopped');
+                if (autoSendInterval) {
+                    clearInterval(autoSendInterval);
+                    autoSendInterval = null;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

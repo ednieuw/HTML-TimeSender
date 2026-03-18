@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLE Time Sender</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .status {
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .status.disconnected {
+            background: #fee;
+            color: #c33;
+        }
+
+        .status.connected {
+            background: #efe;
+            color: #3c3;
+        }
+
+        .status.connecting {
+            background: #ffc;
+            color: #cc6;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #e0e0e0;
+        }
+
+        .time-display-box {
+            background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .time-display {
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .date-display {
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            color: #764ba2;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .format-display {
+            font-size: 11px;
+            font-family: monospace;
+            color: #666;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .format-display div {
+            margin-bottom: 5px;
+        }
+
+        .auto-send-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .auto-send-container span {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 28px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #667eea;
+        }
+
+        input:disabled + .slider {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        .info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 13px;
+            color: #666;
+            margin-top: 20px;
+        }
+
+        .info strong {
+            color: #333;
+        }
+
+        .info code {
+            background: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .log {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 12px;
+            font-family: monospace;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        .log-entry.error {
+            color: #c33;
+        }
+
+        .log-entry.success {
+            color: #3c3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🕐 BLE Time Sender</h1>
+        <p class="subtitle">Time & Date Synchronisation</p>
+        <p style="text-align: center; margin-bottom: 20px; font-size: 13px;">
+            <a href="https://github.com/ednieuw/HTML-TimeSender" target="_blank" style="color: #667eea; text-decoration: none;">
+                📖 Manual and source code
+            </a>
+        </p>
+
+        <div id="status" class="status disconnected">
+            Not connected
+        </div>
+
+        <button id="connectBtn" class="btn-primary">
+            🔗 Connect to WordClock
+        </button>
+
+        <button id="disconnectBtn" class="btn-secondary" style="display: none;" disabled>
+            🔌 Disconnect
+        </button>
+
+        <div class="time-display-box">
+            <div class="time-display" id="timeDisplay">00:00:00</div>
+            <div class="date-display" id="dateDisplay">00-00-0000</div>
+
+            <div class="format-display">
+                <div>📤 Time: <span id="timeFormat">T000000</span></div>
+                <div>📅 Date: <span id="dateFormat">D00000000</span></div>
+            </div>
+        </div>
+
+        <button id="sendBtn" class="btn-primary" disabled>
+            📤 Send Now
+        </button>
+
+        <div class="auto-send-container">
+            <span>🔄 Auto-send (every 30 seconds)</span>
+            <label class="switch">
+                <input type="checkbox" id="autoSendToggle" disabled>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="info">
+            <strong>ℹ️ Format:</strong><br>
+            Time: <code>Thhmmss</code> (e.g. T143052)<br>
+            Date: <code>Dddmmyyyy</code> (e.g. D16022026)<br>
+            <span style="font-size: 11px; display: block; margin-top: 8px;">
+                2 second delay between messages
+            </span>
+        </div>
+
+        <div class="log" id="log"></div>
+    </div>
+
+    <script>
+        let device = null;
+        let characteristic = null;
+        let autoSendInterval = null;
+
+        // Nordic UART Service UUIDs
+        const SERVICE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+        const CHARACTERISTIC_UUID_RX = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
+
+        const connectBtn = document.getElementById('connectBtn');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        const sendBtn = document.getElementById('sendBtn');
+        const statusDiv = document.getElementById('status');
+        const logDiv = document.getElementById('log');
+        const autoSendToggle = document.getElementById('autoSendToggle');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const dateDisplay = document.getElementById('dateDisplay');
+        const timeFormat = document.getElementById('timeFormat');
+        const dateFormat = document.getElementById('dateFormat');
+
+        // Check Web Bluetooth support
+        if (!navigator.bluetooth) {
+            log('❌ Web Bluetooth is not supported in this browser', 'error');
+            statusDiv.textContent = 'Web Bluetooth not supported';
+            connectBtn.disabled = true;
+        } else {
+            log('🚀 App started', 'success');
+        }
+
+        // Update clock every second
+        function updateClock() {
+            const now = new Date();
+
+            // Display time and date
+            timeDisplay.textContent = now.toLocaleTimeString('en-GB');
+            dateDisplay.textContent = now.toLocaleDateString('en-GB');
+
+            // Format strings
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            timeFormat.textContent = `T${hours}${minutes}${seconds}`;
+
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = String(now.getFullYear());
+            dateFormat.textContent = `D${day}${month}${year}`;
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Logging function
+        function log(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const timestamp = new Date().toLocaleTimeString('en-GB');
+            entry.textContent = `[${timestamp}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        // Connect to BLE device
+        connectBtn.addEventListener('click', async () => {
+            try {
+                log('🔍 Searching for WordClock (NUS service)...');
+                statusDiv.textContent = 'Connecting...';
+                statusDiv.className = 'status connecting';
+
+                device = await navigator.bluetooth.requestDevice({
+                    filters: [{ services: [SERVICE_UUID] }]
+                });
+
+                log(`✅ Device found: ${device.name}`, 'success');
+
+                const server = await device.gatt.connect();
+                log('🔗 Connected to GATT server', 'success');
+
+                const service = await server.getPrimaryService(SERVICE_UUID);
+                log('📡 UART service found', 'success');
+
+                characteristic = await service.getCharacteristic(CHARACTERISTIC_UUID_RX);
+                log('✨ RX characteristic found', 'success');
+
+                statusDiv.textContent = `Connected to ${device.name}`;
+                statusDiv.className = 'status connected';
+                connectBtn.style.display = 'none';
+                disconnectBtn.style.display = 'block';
+                disconnectBtn.disabled = false;
+                sendBtn.disabled = false;
+                autoSendToggle.disabled = false;
+
+                // Start auto-send by default
+                autoSendToggle.checked = true;
+                autoSendToggle.dispatchEvent(new Event('change'));
+
+                device.addEventListener('gattserverdisconnected', onDisconnected);
+
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+                statusDiv.textContent = 'Connection failed';
+                statusDiv.className = 'status disconnected';
+            }
+        });
+
+        // Disconnect
+        disconnectBtn.addEventListener('click', () => {
+            if (device && device.gatt.connected) {
+                device.gatt.disconnect();
+                log('🔌 Disconnected', 'success');
+            }
+        });
+
+        function onDisconnected() {
+            log('⚠️ Device disconnected');
+            statusDiv.textContent = 'Not connected';
+            statusDiv.className = 'status disconnected';
+            connectBtn.style.display = 'block';
+            disconnectBtn.style.display = 'none';
+            sendBtn.disabled = true;
+            autoSendToggle.disabled = true;
+            autoSendToggle.checked = false;
+            characteristic = null;
+
+            if (autoSendInterval) {
+                clearInterval(autoSendInterval);
+                autoSendInterval = null;
+            }
+        }
+
+        // Send time and date
+        async function sendTimeAndDate() {
+            if (!characteristic) {
+                log('❌ No connection', 'error');
+                return;
+            }
+
+            try {
+                const now = new Date();
+
+                // Format time: Thhmmss
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                const timeString = `T${hours}${minutes}${seconds}`;
+
+                // Send time
+                const timeEncoder = new TextEncoder();
+                await characteristic.writeValue(timeEncoder.encode(timeString));
+                log(`📤 Time sent: ${timeString}`, 'success');
+
+                // Wait 2 seconds
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                // Format date: Dddmmyyyy
+                const day = String(now.getDate()).padStart(2, '0');
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const year = String(now.getFullYear());
+                const dateString = `D${day}${month}${year}`;
+
+                // Send date
+                const dateEncoder = new TextEncoder();
+                await characteristic.writeValue(dateEncoder.encode(dateString));
+                log(`📅 Date sent: ${dateString}`, 'success');
+
+            } catch (error) {
+                log(`❌ Send failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Send button
+        sendBtn.addEventListener('click', sendTimeAndDate);
+
+        // Auto-send toggle
+        autoSendToggle.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                log('🔄 Auto-send enabled (every 30 seconds)', 'success');
+
+                // Send immediately
+                sendTimeAndDate();
+
+                // Then every 30 seconds
+                autoSendInterval = setInterval(() => {
+                    sendTimeAndDate();
+                }, 30000);
+            } else {
+                log('⏸️ Auto-send stopped');
+                if (autoSendInterval) {
+                    clearInterval(autoSendInterval);
+                    autoSendInterval = null;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
