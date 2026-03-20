@@ -5,10 +5,11 @@ HTML page that connects to a BLE UART client and send time and date to it.
 This web page is developed to send time and date from a cellular to my word- and other clocks when no WIFI is available to receive time by WIFI/NTP.
 
 Use Chrome or Edge (march 2026) to:<br>
-- [Start the time sender Modriaan style](https://ednieuw.home.xs4all.nl/Woordklok/TimeSender/TimeSender.html)
+- [Start the time sender Mondriaan style](https://ednieuw.home.xs4all.nl/Woordklok/TimeSender/TimeSender.html)
 
 - [Start the time sender soft style](https://ednieuw.home.xs4all.nl/Woordklok/TimeSender/TimeSenderSoft.html)
 
+For more info:
 - [See my word clock pages](https://github.com/ednieuw/Arduino-ESP32-Nano-Wordclock)<br>
 - [or the Ardduino Time receiver sketch](https://github.com/ednieuw/BLE-TimeReceiver)<br>
 - [or here](https://github.com/ednieuw/ESP32Communications)
