@@ -4,7 +4,7 @@
 
 HTML page that connects to a BLE UART client and send Time and date to it.
 
-
+[Start the time sender Modrian style](https://ednieuw.home.xs4all.nl/Woordklok/TimeSender/TimeSender.html)
 
 See my word clock pages: https://github.com/ednieuw/Arduino-ESP32-Nano-Wordclock
 
