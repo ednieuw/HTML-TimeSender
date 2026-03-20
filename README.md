@@ -1,13 +1,16 @@
 # HTML-TimeSender
 
-
-
 HTML page that connects to a BLE UART client and send Time and date to it.
+
+This web page is designed to send time and date to send time and date from a cellular to my word and other clock when no wifi is available.
 
 [Start the time sender Modriaan style](https://ednieuw.home.xs4all.nl/Woordklok/TimeSender/TimeSender.html)
 
-See my word clock pages: https://github.com/ednieuw/Arduino-ESP32-Nano-Wordclock
+[Start the time sender soft style](https://ednieuw.home.xs4all.nl/Woordklok/TimeSender/TimeSenderSoft.html)
 
+[See my word clock pages](https://github.com/ednieuw/Arduino-ESP32-Nano-Wordclock)<br>
+[or the Ardduino Time receiver sketch](https://github.com/ednieuw/BLE-TimeReceiver)<br>
+[or here](https://github.com/ednieuw/ESP32Communications)
 
 <img width="1562" height="1225" alt="image" src="https://github.com/user-attachments/assets/d092b023-c4f4-495d-8296-448bb8f0f81d" />
 
