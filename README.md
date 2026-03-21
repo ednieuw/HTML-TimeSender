@@ -1,21 +1,24 @@
 # HTML-TimeSender
 
-
-
 HTML page that connects to a BLE UART client and send Time and date to it.
 
+An iPhone/iPad app can be found in the Apple app store: search for: BLE time sender.<br>
+and an Arduino Nano ESP32 sketch here: https://github.com/ednieuw/BLE-time-Sender.
+
+With the web page interface "Web Bluetooth" a web site can make a BLE-connection.   
+
+See my word clock pages how time and date are set in a Nano ESP32 sketch : https://github.com/ednieuw/Arduino-ESP32-Nano-Wordclock
 
 
-See my word clock pages: https://github.com/ednieuw/Arduino-ESP32-Nano-Wordclock
-
-
-<img width="1562" height="1225" alt="image" src="https://github.com/user-attachments/assets/d092b023-c4f4-495d-8296-448bb8f0f81d" />
+<img width="800"  alt="image" src="https://github.com/user-attachments/assets/d092b023-c4f4-495d-8296-448bb8f0f81d" />
 
 ### Here's a clear overview of Web Bluetooth support (march 2026):
 
 Browsers with full support
 
-Chrome / Chromium-based browsers are the only ones with solid, out-of-the-box Web Bluetooth support. A subset of the Web Bluetooth API is available in ChromeOS, Chrome for Android 6.0, Mac (Chrome 56), and Windows 10 (Chrome 70). Chrome Developers
+Chrome / Chromium-based browsers are the only ones with solid, out-of-the-box Web Bluetooth support. A subset of the Web Bluetooth API is available in ChromeOS, Chrome for Android 6.0, Mac (Chrome 56), and Windows 10 (Chrome 70). 
+
+In some cases *chrome://flags* must be opened in the url adress bar and "Web Bluetooth" must be turned on.
 
 Specifically:
 
