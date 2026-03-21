@@ -1,20 +1,24 @@
 # HTML-TimeSender
 
-HTML page that connects to a BLE UART client and send time and date to it.
+HTML page that connects to a BLE UART client and send time and date to it. We use the web page interface "Web Bluetooth" to make the BLE-connection. 
 
 This web page is developed to send time and date from a cellular to my word- and other clocks when no WIFI is available to receive time by WIFI/NTP.
 
-Use Chrome or Edge (march 2026) to:<br>
+A similar iPhone/iPad app can be found in the Apple app store:<br> Search for: [BLE UART time or click this link](https://apps.apple.com/nl/app/bluetooth-uart-time/id6760344877?l=en-GB).<br>
+
+IOS users can not use this method due to security reason. On MacOS Tahoe "Web Bluetooth" can be used.
+
+Use Chrome or Edge (march 2026) and click the hyperlink to:<br>
 - [Start the time sender Mondriaan style](https://ednieuw.home.xs4all.nl/Woordklok/TimeSender/TimeSender.html)
 
 - [Start the time sender soft style](https://ednieuw.home.xs4all.nl/Woordklok/TimeSender/TimeSenderSoft.html)
 
 For more info:
 - [See my word clock pages](https://github.com/ednieuw/Arduino-ESP32-Nano-Wordclock)<br>
-- [or the Ardduino Time receiver sketch](https://github.com/ednieuw/BLE-TimeReceiver)<br>
+- [or the Arduino Time receiver sketch](https://github.com/ednieuw/BLE-TimeReceiver)<br>
 - [or here](https://github.com/ednieuw/ESP32Communications)
 
-<img width="1562" height="1225" alt="image" src="https://github.com/user-attachments/assets/d092b023-c4f4-495d-8296-448bb8f0f81d" />
+<img width="800"  alt="image" src="https://github.com/user-attachments/assets/d092b023-c4f4-495d-8296-448bb8f0f81d" />
 
 ### Here's a clear overview of Web Bluetooth support (march 2026):
 
