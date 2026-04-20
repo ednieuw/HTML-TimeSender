@@ -9,9 +9,9 @@ A similar iPhone/iPad app can be found in the Apple app store:<br> Search for: [
 IOS users can not use this method due to security reason. On MacOS Tahoe "Web Bluetooth" can be used.
 
 Use Chrome or Edge (march 2026) and click the hyperlink to:<br>
-- [Start the time sender Mondriaan style](https://ednieuw.home.xs4all.nl/Woordklok/TimeSender/TimeSender.html)
+- [Start the time sender Mondriaan style](https://ednieuw.nl/Woordklok/TimeSender/TimeSender.html)
 
-- [Start the time sender soft style](https://ednieuw.home.xs4all.nl/Woordklok/TimeSender/TimeSenderSoft.html)
+- [Start the time sender soft style](https://ednieuw.nl/Woordklok/TimeSender/TimeSenderSoft.html)
 
 For more info:
 - [See my word clock pages](https://github.com/ednieuw/Arduino-ESP32-Nano-Wordclock)<br>
