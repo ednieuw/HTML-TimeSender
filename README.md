@@ -13,6 +13,17 @@ Use Chrome or Edge (march 2026) and click the hyperlink to:<br>
 
 - [Start the time sender soft style](https://ednieuw.com/Woordklok/TimeSender/TimeSenderSoft.html)
 
+### Install as an app with its own icon (Android and Windows 11)
+Use the app version. Open the link in Chrome or Edge and tap **Install app**. The clock icon is then placed on your home screen or in the Start menu and the time sender opens like a normal app:
+- [Start the time sender as installable app](https://ednieuw.com/Woordklok/TimeSender/TimeSenderPWA/)
+
+### Manual
+Scan the QR code in the manual or click a link:
+- [Manual in English (PDF)](https://ednieuw.com/Woordklok/TimeSender/TimeSenderPWA/handleiding/Manual_TimeSender_UK.pdf)
+- [Handleiding in het Nederlands (PDF)](https://ednieuw.com/Woordklok/TimeSender/TimeSenderPWA/handleiding/Handleiding_TimeSender_NL.pdf)
+- [QR code (PNG)](https://ednieuw.com/Woordklok/TimeSender/TimeSenderPWA/handleiding/qr-timesender.png)
+- [Simple web page with the manual in both languages](https://ednieuw.com/Woordklok/TimeSender/QRappTimeSender.html)
+
 For more info:
 - [See my word clock pages](https://github.com/ednieuw/Arduino-ESP32-Nano-Wordclock)<br>
 - [or the Arduino Time receiver sketch](https://github.com/ednieuw/BLE-TimeReceiver)<br>
