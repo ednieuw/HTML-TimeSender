@@ -4,9 +4,10 @@ HTML page that connects to a BLE UART client and send time and date to it. We us
 
 This web page is developed to send time and date from a cellular to my word- and other clocks when no WIFI is available to receive time by WIFI/NTP.
 
-A similar iPhone/iPad app can be found in the Apple app store:<br> Search for: [BLE UART time or click this link](https://apps.apple.com/nl/app/bluetooth-uart-time/id6760344877?l=en-GB).<br>
+A similar iPhone/iPad app can be found in the Apple app store:<br> 
+Search in the Apple app store for: [BLE UART time or click this link](https://apps.apple.com/nl/app/bluetooth-uart-time/id6760344877?l=en-GB).<br>
 
-IOS users can not use this method due to security reason. On MacOS Tahoe "Web Bluetooth" can be used.
+IOS users can not use this method (2026) due to security reason. On MacOS Tahoe "Web Bluetooth" can be used.
 
 Use Chrome or Edge (march 2026) and click the hyperlink to:<br>
 - [Start the time sender Mondriaan style](https://ednieuw.com/Woordklok/TimeSender/TimeSender.html)
