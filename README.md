@@ -60,7 +60,11 @@ Then open the [iPhone launcher page](https://ednieuw.com/Woordklok/TimeSender/Ti
 <table>
 <tr>
 <td><a href="https://apps.apple.com/nl/app/bluetooth-uart-time/id6760344877?l=en-GB"><img src="Pics/uarttime.png" width="120" alt="Bluetooth UART time"></a></td>
-<td>Alternatively use my own iPhone/iPad app <a href="https://apps.apple.com/nl/app/bluetooth-uart-time/id6760344877?l=en-GB">Bluetooth UART time</a> from the App Store. A similar app for sending time and date.</td>
+<td>Alternatively use my own iPhone/iPad app <a href="https://apps.apple.com/nl/app/bluetooth-uart-time/id6760344877?l=en-GB">Bluetooth UART time</a> 
+    from the App Store. A similar app for sending time and date.<br>
+This app connects to the word clock automatically when option H05 in the word clock is turned on.<br> 
+The Word clock software will then listen for the app to connect and receive time from the the BLE timesender app as long as it is open.<br>
+</td>
 </tr>
 </table>
 
